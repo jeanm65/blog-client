@@ -1,7 +1,8 @@
-import { Theme, useTheme } from "@emotion/react";
-import { Button, ThemeProvider, createTheme, styled } from "@mui/material"
+import { Theme, useTheme, css } from "@emotion/react";
+import { Button, ThemeProvider, createTheme } from "@mui/material"
 import { ThemeProvider as EmotionThemeProvider} from '@emotion/react'
 import { green, purple } from '@mui/material/colors';
+import { GlobalStyles } from "./GlobalStyles";
 
 const theme = createTheme({
   palette: {
@@ -16,6 +17,7 @@ const theme = createTheme({
   },
 });
 
+
 const classes = {
   button: (theme: Theme) => ({
     backgroundColor: theme.palette.secondary.dark
@@ -25,7 +27,11 @@ const classes = {
 const Home = () => {
   const appTheme = useTheme();
   return (
-      <Button variant="contained" sx={{ bgcolor:appTheme.palette.secondary.main }}>Button sx</Button>
+      <>
+       <Button variant="contained" sx={{ bgcolor:appTheme.palette.secondary.main }}>Button sx</Button>
+       <Button variant="contained" css={{ backgroundColor:classes.button }}>Button emotion</Button>
+      </>
+     
   )
 }
 
@@ -34,7 +40,7 @@ function App() {
   return (
     <ThemeProvider theme={ theme }>
       <EmotionThemeProvider theme={ theme }>
-        <Button variant="contained" css={classes.button}>Button emotion</Button>
+        <GlobalStyles theme={ theme } />
         <Home />
       </EmotionThemeProvider>
     </ThemeProvider>
