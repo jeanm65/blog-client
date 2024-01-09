@@ -3,11 +3,16 @@ export interface IArticle {
   _id: string;
   title: string;
   content: string;
-  _v: number
+  __v: number;
 } 
 
 export interface IArticleInput extends Pick<IArticle, "title" | "content">{} 
+export interface IArticlesResponse {
+  success: boolean;
+  articles: IArticle[];
+}
+
 export interface IArticleResponse {
   success: boolean;
-  articles: IArticle[]
+  article: IArticle;
 }
