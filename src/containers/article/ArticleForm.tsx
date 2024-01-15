@@ -1,4 +1,4 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Stack } from "@mui/material";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { IArticle, IArticleInput } from "../../types/article.type";
 
@@ -36,8 +36,8 @@ const ArticleForm = ( { onSubmit, article, loading }: Props) => {
     setValues(initialValues);
   }
   return (
-    
       <form onSubmit={handleSubmit}>
+        <Stack spacing={2}>
         <TextField 
         label="title" 
         variant="outlined" 
@@ -53,9 +53,10 @@ const ArticleForm = ( { onSubmit, article, loading }: Props) => {
           value={values.content}
           onChange={handleChange}
         />  
-        <Button type="submit">
+        <Button type="submit" variant="contained">
           { loading ? "...loading" : "Save"}
         </Button>
+        </Stack>
       </form>
   );
 };
