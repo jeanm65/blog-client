@@ -1,11 +1,7 @@
-import { Button, TextField, Stack } from "@mui/material";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { IArticle, IArticleInput } from "../../types/article.type";
-
-const initialValues = {
-  title: "",
-  content: ""
-}
+import { Controller, SubmitHandler, useForm  } from "react-hook-form";
+import { Button, Stack, TextField } from "@mui/material";
+import { useEffect } from "react";
 
 type Props = {
   onSubmit : (value: IArticleInput) => void;
@@ -13,46 +9,54 @@ type Props = {
   loading?: boolean
 } 
 
-const ArticleForm = ( { onSubmit, article, loading }: Props) => {
-  const [values, setValues ] = useState<IArticleInput> (initialValues);
+const initialValues = {
+  title: "",
+  content: ""
+}
+
+const ArticleForm = ( { article, onSubmit, loading }: Props) => {
+  const { control, handleSubmit, reset } = useForm<IArticleInput>({
+    defaultValues: initialValues 
+  });
 
   useEffect(() => {
-    if (!article) return;
-    setValues({
+    if(!article) return;
+    reset({
       title: article.title,
-      content: article.content,
+      content: article.content
     })
-  }, [article])
+  }, [article, reset]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValues((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
-  }
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const _onSubmit: SubmitHandler<IArticleInput> = (values) => {
     onSubmit(values);
-    setValues(initialValues);
   }
   return (
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(_onSubmit)}>
         <Stack spacing={2}>
-        <TextField 
-        label="title" 
-        variant="outlined" 
-        name="title" 
-        value= {values.title}
-        onChange={handleChange} />  
-        <TextField
-          label="content"
-          multiline
-          maxRows={4}
-          variant="outlined"
-          name="content"
-          value={values.content}
-          onChange={handleChange}
-        />  
+            <Controller
+              name="title"
+              control ={control}
+              render = {({ field }) => (
+              <TextField 
+                label="title" 
+                variant="outlined" 
+                { ...field } 
+              /> 
+           )}
+         />
+              <Controller
+                    name="content"
+                    control ={control}
+                    render={({ field }) => (
+                    <TextField
+                        label="content"
+                        multiline
+                        maxRows={4}
+                        variant="outlined"
+                        { ... field }
+                    />
+            )}
+                 />  
         <Button type="submit" variant="contained">
           { loading ? "...loading" : "Save"}
         </Button>
