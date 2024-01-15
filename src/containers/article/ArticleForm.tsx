@@ -9,10 +9,11 @@ const initialValues = {
 
 type Props = {
   onSubmit : (value: IArticleInput) => void;
-  article: IArticle | null;
+  article?: IArticle | null; 
+  loading?: boolean
 } 
 
-const ArticleForm = ( { onSubmit, article }: Props) => {
+const ArticleForm = ( { onSubmit, article, loading }: Props) => {
   const [values, setValues ] = useState<IArticleInput> (initialValues);
 
   useEffect(() => {
@@ -31,7 +32,6 @@ const ArticleForm = ( { onSubmit, article }: Props) => {
   }
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('values:', values);
     onSubmit(values);
     setValues(initialValues);
   }
@@ -54,7 +54,7 @@ const ArticleForm = ( { onSubmit, article }: Props) => {
           onChange={handleChange}
         />  
         <Button type="submit">
-          save
+          { loading ? "...loading" : "Save"}
         </Button>
       </form>
   );

@@ -4,18 +4,22 @@ import Articles from "./article/Articles";
 import { IArticle, IArticleInput } from "../types/article.type";
 import getArticles, { createArticle, deleteArticle, editArticle } from "../actions/articles.action";
 import Notification from "../components/Notification";
+import LinearProgress from '@mui/material/LinearProgress';
 
 
 const Home = () => {
   const [articles, setArticles] = useState<IArticle[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<IArticle | null>();
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const init = async () => {
       try {
+        setLoading(true);
         const articles = await getArticles();
         setArticles(articles as IArticle[]);
+        setLoading(false);
       } catch (error) {
         setError(error as string);
       }
@@ -25,9 +29,11 @@ const Home = () => {
 
   const handleDeleteArticle = async ( id: string ) => {
     try {
+      setLoading(true);
       const deletedArticle = await deleteArticle(id);
       const newArticles = articles.filter((article:  IArticle) => article._id !== (deletedArticle as IArticle)._id );
       setArticles(newArticles);
+      setLoading(false);
     } catch (error) {
       setError(error as string)
     }
@@ -38,6 +44,7 @@ const Home = () => {
   }
   
   const handleSubmitArticle = async (values: IArticleInput) => {
+    setLoading(true);
     try {
       //----------EDITION--------------//
       if(selectedArticle){
@@ -55,22 +62,25 @@ const Home = () => {
         return article;
       });
      });
+     setLoading(false);
      return;
    } 
       //----------CREATION--------------//
      const article = await createArticle(values);
       setArticles((prev: IArticle[]): IArticle[] => [article as IArticle, ...prev]); 
     } catch (error) {
-      setError(error as string)
+      setError(error as string);
     }
+    setLoading(false); 
   }
 
   
 
   return (
-      <div css={{ minHeight: '100vh'}} className= 'flexColumn'>
+      <div css={{ minHeight: '100vh', position: 'relative'}} className= 'flexColumn'>
+       { loading && <LinearProgress css={{ height: 4, position: 'absolute', top: 0, left: 0, right: 0}} className="stretchSelf" /> }
         <h1>Home</h1>
-        <ArticleForm  onSubmit={ handleSubmitArticle } article={ selectedArticle } />
+        <ArticleForm  onSubmit={ handleSubmitArticle } article={ selectedArticle } loading={loading} />
         <Articles articles={articles as IArticle[]} onDelete={handleDeleteArticle} onEdit={ handleSelectedArticle }/>
         <Notification message={error} show={!!error} severity='error' />
       </div>    
