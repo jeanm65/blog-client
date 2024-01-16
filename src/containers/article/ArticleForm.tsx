@@ -3,6 +3,8 @@ import TextField from "../../components/form/fields/TextField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import Form from "../../components/form/Form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { articleSchema } from "../../validations/article.validations";
 
 type Props = {
   onSubmit : (value: IArticleInput) => void;
@@ -17,7 +19,8 @@ const initialValues = {
 
 const ArticleForm = ( { article, onSubmit, loading }: Props) => {
   const form  = useForm<IArticleInput>({
-    defaultValues: initialValues 
+    defaultValues: initialValues,
+    resolver: zodResolver(articleSchema),
   });
 
   const { handleSubmit, reset }= form;

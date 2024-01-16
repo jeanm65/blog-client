@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { articleSchema } from "../validations/article.validations";
+
 export interface IArticle {
   map(arg0: (article: IArticle, index: number) => import("@emotion/react/jsx-runtime").JSX.Element): import("react").ReactNode;
   _id: string;
@@ -6,7 +9,9 @@ export interface IArticle {
   __v: number;
 } 
 
-export interface IArticleInput extends Pick<IArticle, "title" | "content">{} 
+export type IArticleInput = z.infer<typeof articleSchema>;
+
+// export interface IArticleInput extends Pick<IArticle, "title" | "content">{} 
 export interface IArticlesResponse {
   success: boolean;
   articles: IArticle[];

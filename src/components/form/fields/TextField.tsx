@@ -1,5 +1,6 @@
-import { TextField as MUITextField, TextFieldProps } from "@mui/material";
+import { FormHelperText, TextField as MUITextField, Stack, TextFieldProps } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
+import TextInput from "../inputs/TextInput";
 
 
 type Props = {
@@ -7,18 +8,22 @@ type Props = {
 } & TextFieldProps
 
 const TextField = ({ name, ...inputProps }: Props) => {
-  const { control } = useFormContext();
+  const { control, formState: { errors } } = useFormContext();
   return (
-    <Controller
+        <Controller
           name= { name }
           control ={control}
           render = {({ field }) => (
-            <MUITextField
-                variant="outlined" 
+            <Stack spacing={1}>
+               <TextInput
+                error={!!errors?.[name]} 
                 { ...field } 
                 { ...inputProps } 
               /> 
+               { errors?.[name] && <FormHelperText error>{ (errors as any )[name]?.message }</FormHelperText> }
+            </Stack> 
            )}
-         />
-          )}      
+        />
+      )
+    }     
 export default TextField;
