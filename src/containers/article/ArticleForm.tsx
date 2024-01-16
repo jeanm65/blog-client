@@ -1,8 +1,8 @@
 import { IArticle, IArticleInput } from "../../types/article.type";
-import TextField from "../../components/form/textfield/TextField";
-import { SubmitHandler, useForm, FormProvider  } from "react-hook-form";
-import { Button, Stack } from "@mui/material";
+import TextField from "../../components/form/fields/TextField";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useEffect } from "react";
+import Form from "../../components/form/Form";
 
 type Props = {
   onSubmit : (value: IArticleInput) => void;
@@ -35,27 +35,18 @@ const ArticleForm = ( { article, onSubmit, loading }: Props) => {
     reset(initialValues);
   }
   return (
-    <FormProvider { ...form }>
-        <form onSubmit={handleSubmit(_onSubmit)}>
-          <Stack spacing={2}>
-              <TextField
-                label="title" 
-                name="title"
-              /> 
-              <TextField
-                label="content"
-                name="content"
-                multiline
-                maxRows={4}
-              />
-                     
-          <Button type="submit" variant="contained">
-            { loading ? "...loading" : "Save"}
-          </Button>
-          </Stack>
-      </form>
-    </FormProvider>
-      
+    <Form form={ form } onSubmit={handleSubmit(_onSubmit)} loading={ loading }>
+          <TextField
+            label="title" 
+            name="title"
+          /> 
+          <TextField
+            label="content"
+            name="content"
+            multiline
+            maxRows={4}
+          />
+    </Form>  
   );
 };
 
